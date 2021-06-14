@@ -1,0 +1,35 @@
+1. CREATE TABLE Persons (
+    ID int,
+    tanggal_order date,
+    status varchar(255),
+    tanggal_pembayaran date,	
+    PRIMARY KEY (ID)
+);
+INSERT INTO `transaksi`(`ID`, `tanggal_order`, `status`, `tanggal_pembayaran`) 
+VALUES (1,'2021/06/1','lunas','2021/06/10'), (2,'2021/06/10','pending',NULL);
+
+2. CREATE TABLE detail_transaksi (
+    ID int NOT NULL,
+    ID_transaksi int NOT NULL,
+    harga int,
+    jumlah int,
+    subtotal int,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (ID_transaksi) REFERENCES transaksi(ID)
+);
+
+INSERT INTO `detail_transaksi`(`ID`, `ID_transaksi`, `harga`, `jumlah`, `subtotal`) 
+VALUES 	(1,1,10000,3,30000),
+		(2,1,15000,4,60000),
+        (3,1,20000,5,100000);
+INSERT INTO `detail_transaksi`(`ID`, `ID_transaksi`, `harga`, `jumlah`, `subtotal`) 
+VALUES 	(4,2,10000,1,10000),
+		(5,2,15000,2,30000),
+        (6,2,20000,2,40000);
+
+3. SELECT transaksi.
+	ID, tanggal_order, status, tanggal_pembayaran, SUM(subtotal) AS total, COUNT(*) AS jumlah_barang 
+	FROM transaksi 
+	LEFT JOIN detail_transaksi 
+	ON transaksi.ID = detail_transaksi.ID_transaksi 
+	GROUP BY ID_transaksi
